@@ -32,5 +32,17 @@ public class TreeNode {
         return value;
     }
 
+    public void setValue(Integer value) {
+        this.value=value;
+    }
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null || getClass() != obj.getClass())
+            return false;
+        Integer other = (Integer) obj;
+        return value == other.intValue();
+    }
 
 }
