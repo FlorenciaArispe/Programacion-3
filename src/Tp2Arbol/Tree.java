@@ -258,6 +258,7 @@ public class Tree {
         }
     }
 
+    //DEVUELVE EL RECORRIDO MAS LARGO EN EL ARBOL
     public List<Integer> getLongestBranch() {
         List<Integer> longestBranch = new ArrayList<>();
         getLongestBranch(this.root, longestBranch);
@@ -279,6 +280,7 @@ public class Tree {
         }
     }
 
+    //LA FRONTERA SON TODOS LOS ELEMENTOS HOJAS
     public List<Integer> getFrontera(){
         List<Integer> frontera = new ArrayList<>();
         getFrontera(this.root, frontera);
@@ -303,6 +305,7 @@ public class Tree {
         }
     }
 
+    //DEVUELVE EL ELEMENTO MAYOR DEL ARBOL
     public  Integer getMaxElem(){
         return getMaxElem(root);
     }
@@ -316,6 +319,7 @@ public class Tree {
         }
     }
 
+    //DEVUELVE UNA LISTA DE LOS ELEMENTOS EN ESE DETERMIANDO NIVEL
     public List<Integer> getElemAtLevel(int nivel){
         List<Integer> elemPorNivel = new ArrayList<>();
         getElemAtLevel(this.root, elemPorNivel, nivel, 1);
@@ -333,12 +337,36 @@ public class Tree {
         }
     }
 
+    //Retorna la suma de todos los nodos internos del árbol
+    public int sumaNodosInternos(){
+        return sumaNodosInternos(this.root);
+    }
+    private int sumaNodosInternos(TreeNode node){
+        if(node==null  || (node.getRight()== null && node.getLeft()==null)){
+            return 0;
+        }
+        return node.getValue() + sumaNodosInternos(node.getLeft()) + sumaNodosInternos(node.getRight());
+
+    }
+
+    //RETORNA UNA LISTA CON LOS VALORES MAYORES AL VALOR DE ENTRADA k
+    public List<Integer> valoresMayoresaK(int k){
+        List<Integer>  valoresMayoresaK = new ArrayList<>();
+        valoresMayoresaK(this.root, k, valoresMayoresaK);
+        return valoresMayoresaK;
+    }
+
+    private void valoresMayoresaK(TreeNode node, int k, List<Integer> valoresMayoresaK){
+        if(node!=null){
+            if(node.getValue()>k){
+                valoresMayoresaK.add(node.getValue());
+            }
+            valoresMayoresaK(node.getLeft(),k,valoresMayoresaK);
+            valoresMayoresaK(node.getRight(),k,valoresMayoresaK);
+        }
 
 
-
-
-
-
+    }
 
 
 }

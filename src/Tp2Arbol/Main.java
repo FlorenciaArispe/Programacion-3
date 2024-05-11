@@ -39,6 +39,11 @@ public class Main {
         for(int i=0; i<elemPorNivel.size(); i++){
             System.out.println(elemPorNivel.get(i));
         }*/
+        //System.out.println(arbol.sumaNodosInternos());
+        /*List<Integer> valoresMayoresaK= arbol.valoresMayoresaK(13);
+        for(int i=0; i<valoresMayoresaK.size(); i++){
+            System.out.println(valoresMayoresaK.get(i));
+        }*/
 
     }
 }
