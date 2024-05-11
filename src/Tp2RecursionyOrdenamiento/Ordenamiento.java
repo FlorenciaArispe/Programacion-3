@@ -1,4 +1,4 @@
-package Tp2;
+package Tp2RecursionyOrdenamiento;
 
 public class Ordenamiento {
 

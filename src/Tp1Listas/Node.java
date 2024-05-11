@@ -1,4 +1,4 @@
-package Tp1;
+package Tp1Listas;
 
 public class Node<T> {
     private T info;

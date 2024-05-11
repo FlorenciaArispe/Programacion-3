@@ -1,4 +1,4 @@
-package Tp1;
+package Tp1Listas;
 
 import java.util.Iterator;
 

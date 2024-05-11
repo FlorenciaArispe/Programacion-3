@@ -1,4 +1,4 @@
-package Tp1;
+package Tp1Listas;
 
 public class Main {
     public static void main(String[] args){

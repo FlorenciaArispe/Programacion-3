@@ -1,4 +1,4 @@
-package Tp2;
+package Tp2RecursionyOrdenamiento;
 
 public class Recursion {
     //1)Implemente un algoritmo recursivo que determine si un arreglo de tamaño N está ordenado

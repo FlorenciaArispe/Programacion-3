@@ -1,6 +1,4 @@
-package Tp1;
-
-import java.util.Iterator;
+package Tp1Listas;
 
 public class List<T extends Comparable<T>> implements Iterable<T>  {
     private Node<T> first;
