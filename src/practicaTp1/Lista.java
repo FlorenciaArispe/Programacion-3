@@ -103,16 +103,14 @@ public class Lista<T extends Comparable<T>> implements Iterable<T> {
             else {
                 it1.next();
             }
-
         }
         return listaNueva;
     }
 
-    //LISTAS DEORDENADAS
+    //LISTAS DESORDENADAS
     public Lista<T> listasDesordenadas(Lista<T> lista1, Lista<T> lista2){
         Lista<T> nueva= new Lista<>();
         MyIterator<T> it1= lista1.iterator();
-
 
         while(it1.hasNext()){
             MyIterator<T> it2= lista2.iterator();
@@ -146,15 +144,15 @@ public class Lista<T extends Comparable<T>> implements Iterable<T> {
                 it2.next();
             }
             if(!existe){
-                nueva.insertFront(info1);
+                nueva.insertOrdenado(info1);
             }
             it1.next();
         }
+
     return nueva;
     }
 
     public void insertOrdenado(T info) {
-        System.out.println("entre 1 " + info);
         Node<T> newNode = new Node<>(null, info);
 
         // caso lista vacía o va al principio
@@ -174,7 +172,6 @@ public class Lista<T extends Comparable<T>> implements Iterable<T> {
         current.setNext(newNode);
         size++;
     }
-
 
     @Override
     public String toString(){
