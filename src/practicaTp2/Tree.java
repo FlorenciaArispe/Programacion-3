@@ -1,5 +1,9 @@
 package practicaTp2;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
+
 public class Tree {
 
     private TreeNode raiz;
@@ -197,9 +201,126 @@ public class Tree {
                return deleteRecursion(nmi.getInfo(), nmi);
             }
         }
+    }
 
+    //DEVUELVE LA ALTURA DE UN ARBOL
+    public int getHeight(){
+        return getHeight(raiz);
+    }
+
+    public int getHeight( TreeNode cursor ){
+
+        if(cursor == null){
+            return -1;
+        }
+        else{
+            int alturader= getHeight(cursor.getDerecha());
+            int alturaizq=getHeight(cursor.getIzquierda());
+
+            if(alturader> alturaizq){
+                return alturader + 1;
+            }else{
+                return alturaizq + 1;
+            }
+        }
 
     }
+
+    //POSORDER
+    public void posOrder(){
+        posOrder(raiz);
+    }
+
+    public void posOrder(TreeNode cursor){
+        if(cursor!=null){
+            posOrder(cursor.getIzquierda());
+            posOrder(cursor.getDerecha());
+            System.out.println(cursor.getInfo());
+        }
+    }
+
+    //PREORDER
+    public void preOrder(){
+        preOrder(raiz);
+    }
+
+    public void preOrder(TreeNode cursor){
+        if(cursor!= null ){
+            System.out.println(cursor.getInfo());
+            preOrder(cursor.getIzquierda());
+            preOrder(cursor.getDerecha());
+        }
+    }
+
+    //EN ORDEN
+    public void inOrder(){
+        inOrder(raiz);
+    }
+
+    public void inOrder(TreeNode cursor){
+        if(cursor!=null){
+            inOrder(cursor.getIzquierda());
+            System.out.println(cursor.getInfo());
+            inOrder(cursor.getDerecha());
+        }
+    }
+
+    //RECORRIDO MAS LARGO
+    public List<Integer> getLongesBranch(){
+
+
+        return getLongesBranch(raiz);
+    }
+
+    public List<Integer> getLongesBranch(TreeNode cursor){
+        if(cursor == null){
+            return new ArrayList<>();
+        }
+        else{
+            List<Integer> caminoIzq= new ArrayList<>();
+            List<Integer> caminoDer= new ArrayList<>();
+
+            caminoIzq = getLongesBranch(cursor.getIzquierda());
+            caminoDer = getLongesBranch(cursor.getDerecha());
+
+            if(caminoIzq.size() > caminoDer.size()){
+                caminoIzq.add(0,cursor.getInfo());
+                return caminoIzq;
+            }
+            else{
+                caminoDer.add(0,cursor.getInfo());
+                return caminoDer;
+            }
+        }
+    }
+
+    //FRONTERA: TODOS LOS NODOS HOJAS
+    public List<Integer> getFrontera(){
+        return getFrontera(raiz);
+    }
+
+    public List<Integer> getFrontera(TreeNode cursor){
+        if(cursor== null){
+            return new ArrayList<>();
+        }
+        else{
+            if(cursor.getIzquierda() == null && cursor.getDerecha() == null){
+                List<Integer> nueva= new ArrayList<>(cursor.getInfo());
+                nueva.add(cursor.getInfo());
+                return nueva;
+            }
+            else{
+                List<Integer> izquierda= getFrontera(cursor.getIzquierda());
+                List<Integer> derecha= getFrontera(cursor.getDerecha());
+                izquierda.addAll(derecha);
+
+                return izquierda;
+
+            }
+        }
+
+    }
+
 
     public static void main (String [] args){
         TreeNode raiz= new TreeNode(6,null,null);
@@ -213,10 +334,30 @@ public class Tree {
         arbol.add(4);
 //        arbol.add(2);
         arbol.add(9);
+//        arbol.add(10);
+//        arbol.add(11);
 
         //System.out.println("raiz: " +  arbol.getRaizObjeto().getIzquierda().getIzquierda().getDerecha().getInfo());
        // System.out.println("esta vacia: " + arbol.isEmpty());
-System.out.println(arbol.delete(6));
+    //System.out.println(arbol.delete(6));
+        //System.out.println("altura del arbol " + arbol.getHeight());
+       // arbol.posOrder();
+        //arbol.preOrder();
+        //arbol.inOrder();
+//    List<Integer> lista= new ArrayList<>(arbol.getLongesBranch());
+//        System.out.println("tamaño " + lista.size());
+//
+//    for(Integer i : lista){
+//            System.out.println(i);
+//    }
+
+            List<Integer> lista= new ArrayList<>(arbol.getFrontera());
+        System.out.println("tamaño " + lista.size());
+
+    for(Integer i : lista){
+            System.out.println(i);
+    }
+
 
 
     }
