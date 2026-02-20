@@ -20,7 +20,7 @@ public class Main {
         arbol.printInOrder();
         //System.out.println(arbol.delete(3));
         //arbol.printInOrder();
-        //System.out.println(arbol.getRoot());
+      System.out.println(arbol.getRoot());
         //System.out.println(arbol.hasElem(11));
         //System.out.println("NMI: " + arbol.NMI());
         //System.out.println("NMD: " + arbol.NMD());
