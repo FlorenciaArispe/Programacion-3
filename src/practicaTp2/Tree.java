@@ -12,6 +12,10 @@ public class Tree {
         this.raiz= raiz;
     }
 
+    public Tree(){
+        this.raiz=null;
+    }
+
     public void add(Integer nuevo){
         if(raiz == null ){
             raiz= new TreeNode(nuevo,null,null);
@@ -315,12 +319,170 @@ public class Tree {
                 izquierda.addAll(derecha);
 
                 return izquierda;
+            }
+        }
+    }
 
+    //DEVUELVE EL MAYOR ELEMENTO DEL ARBOL
+    public Integer getMaxElem(){
+        return getMaxElem(raiz);
+    }
+
+    public Integer getMaxElem(TreeNode cursor){
+        if(cursor==null){
+            return -1;
+        }
+        else{
+
+            Integer resultado= getMaxElem(cursor.getDerecha());
+
+            return Math.max(resultado, cursor.getInfo());
+        }
+    }
+
+    //DEVUELVE UNA LISTA DE TODOS LOS NODOS DE UN DETERMINADO NIVEL.
+    public List<Integer> getElemAtLevel(int nivel){
+        return getElemAtLevel(nivel, 1,  raiz);
+    }
+
+    public List<Integer> getElemAtLevel(int nivel, int actual , TreeNode cursor){
+    if(cursor == null){
+        return new ArrayList<>();
+    }
+    else{
+        if(nivel == actual){
+
+            List<Integer> result= new ArrayList<>();
+            result.add(cursor.getInfo());
+            return result;
+        }
+        else{
+            List<Integer> listaDerecha= getElemAtLevel(nivel, actual + 1, cursor.getDerecha());
+            List<Integer> listaIzquierda= getElemAtLevel(nivel, actual + 1, cursor.getIzquierda());
+            listaDerecha.addAll(listaIzquierda);
+
+            return listaDerecha;
+        }
+    }
+    }
+
+//    Dado un árbol binario de búsquedas que almacena números enteros, implementar un algoritmo
+//    que retorne la suma de todos los nodos internos del árbol.
+        public int sumaNodosInternos(){
+            return sumaNodosInternos(raiz);
+        }
+
+        public int sumaNodosInternos(TreeNode cursor){
+            if (cursor == null) {
+                return 0;
+            }
+            else{
+                if(cursor.getIzquierda() == null && cursor.getDerecha() == null){
+                    //ES HOJA
+                    return 0;
+                }
+                else{
+                    int sumaDerecha=  sumaNodosInternos(cursor.getDerecha());
+                    int sumaIzquierda=  sumaNodosInternos(cursor.getIzquierda());
+
+                    return cursor.getInfo() + sumaDerecha + sumaIzquierda;
+                }
             }
         }
 
+        //Devolver una lista solo con los nodos que sean superiores a K
+    public List<Integer> valoresMayores(int k){
+        return valoresMayores(k, raiz);
     }
 
+    public List<Integer> valoresMayores(int k, TreeNode cursor){
+        if(cursor== null){
+            return new ArrayList<>();
+        }
+        else{
+            List<Integer> mayoresDerecha= valoresMayores(k, cursor.getDerecha());
+            List<Integer> mayoresIzquierda= valoresMayores(k, cursor.getIzquierda());
+            mayoresDerecha.addAll(mayoresIzquierda);
+
+            if(cursor.getInfo() > k){
+                mayoresDerecha.add(cursor.getInfo());
+
+
+            }
+            return mayoresDerecha;
+
+        }
+    }
+
+    //COMPLETAR LOS VALORES INTERNOS DE UN ARBOL (EL VALOR ES IGUAL A EL HIJO DERECHO MENOS EL HIJO IZQUIERDO
+    public void completarInternos(){
+            Integer infoRaiz= completarInternos(raiz);
+            raiz.setInfo(infoRaiz);
+    }
+
+    public Integer completarInternos(TreeNode cursor){
+        if(cursor==null){
+            return 0;
+        }
+        else{
+            if(cursor.getDerecha() == null && cursor.getIzquierda() == null){
+                return cursor.getInfo();
+            }
+            else{
+                Integer derecha=  completarInternos(cursor.getDerecha());
+                Integer izquierda= completarInternos(cursor.getIzquierda());
+
+                cursor.setInfo(derecha-izquierda);
+                return derecha - izquierda;
+
+            }
+        }
+    }
+
+    //FINAL 24/4/2024
+    //devolver una lista con todos los valores ordenados que esten entre M y N
+    public List valoresEntre(int m, int n){
+        List resultado= new ArrayList();
+        valoresEntre(m, n, raiz, resultado);
+        return resultado;
+    }
+
+    public void valoresEntre(int m, int n, TreeNode cursor, List resultado){
+     if(cursor!= null){
+         if(cursor.getInfo() > m){
+             valoresEntre(m,n,cursor.getIzquierda(), resultado);
+         }
+         if(cursor.getInfo() >= m && cursor.getInfo()<= n){
+             resultado.add(cursor.getInfo());
+         }
+         if(cursor.getInfo() < n){
+             valoresEntre(m,n,cursor.getDerecha(), resultado);
+         }
+     }
+    }
+
+
+//FINAL 17/07/2025
+    //dado 2 arboles binarios de busqueda, determinar si ambos tienen la misma estructura (sin importar el valor los nodos)
+    public boolean mismaEstructura(Tree arbol1, Tree arbol2){
+       return mismaEstructuraRecursion(arbol1.getRaizObjeto(), arbol2.getRaizObjeto());
+    }
+
+    public boolean mismaEstructuraRecursion(TreeNode cursor1, TreeNode cursor2){
+        if((cursor1 != null && cursor2 == null) || (cursor1 == null && cursor2 != null)){
+            return false;
+        }
+        else{
+            if(cursor1 == null && cursor2 == null){
+                return true;
+            }
+            boolean izquierda= mismaEstructuraRecursion(cursor1.getIzquierda(), cursor2.getIzquierda());
+            boolean derecha=  mismaEstructuraRecursion(cursor1.getDerecha(), cursor2.getDerecha());
+
+           return izquierda && derecha;
+
+        }
+    }
 
     public static void main (String [] args){
         TreeNode raiz= new TreeNode(6,null,null);
@@ -334,8 +496,15 @@ public class Tree {
         arbol.add(4);
 //        arbol.add(2);
         arbol.add(9);
-//        arbol.add(10);
+      arbol.add(10);
 //        arbol.add(11);
+
+//            List<Integer> lista= new ArrayList<>(arbol.valoresEntre(4,7));
+//        System.out.println("tamaño " + lista.size());
+//
+//    for(Integer i : lista){
+//            System.out.println(i);
+//    }
 
         //System.out.println("raiz: " +  arbol.getRaizObjeto().getIzquierda().getIzquierda().getDerecha().getInfo());
        // System.out.println("esta vacia: " + arbol.isEmpty());
@@ -350,13 +519,47 @@ public class Tree {
 //    for(Integer i : lista){
 //            System.out.println(i);
 //    }
+//
+//            List<Integer> lista= new ArrayList<>(arbol.getFrontera());
+//        System.out.println("tamaño " + lista.size());
+//
+//    for(Integer i : lista){
+//            System.out.println(i);
+//    }
 
-            List<Integer> lista= new ArrayList<>(arbol.getFrontera());
-        System.out.println("tamaño " + lista.size());
+      //  System.out.println(arbol.getMaxElem());
 
-    for(Integer i : lista){
-            System.out.println(i);
-    }
+//            List<Integer> lista= new ArrayList<>(arbol.getElemAtLevel(2));
+//        System.out.println("tamaño " + lista.size());
+//
+//    for(Integer i : lista){
+//            System.out.println(i);
+//    }
+
+      //  System.out.println(arbol.sumaNodosInternos());
+
+//                    List<Integer> lista= new ArrayList<>(arbol.valoresMayores(6));
+//        System.out.println("tamaño " + lista.size());
+//
+//    for(Integer i : lista){
+//            System.out.println(i);
+//    }
+
+        Tree arbol1= new Tree();
+
+        arbol1.add(6);
+        arbol1.add(3);
+        arbol1.add(7);
+        arbol1.add(5);
+
+        Tree arbol2= new Tree();
+
+        arbol2.add(6);
+        arbol2.add(3);
+        arbol2.add(7);
+        arbol2.add(5);
+
+        System.out.println(arbol1.mismaEstructura(arbol1, arbol2));
 
 
 

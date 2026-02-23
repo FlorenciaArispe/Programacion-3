@@ -2,12 +2,17 @@ package final14082025;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class ABB<T> {
     private Nodo raiz;
 
     public ABB(Nodo raiz){
         this.raiz=raiz;
+    }
+
+    public ABB(){
+        this.raiz=null;
     }
 
     //AGREGA UN NUEVO ELEMENTO AL ARBOL Y RETORNA TRUE SI LA CLAVE ES NUEVA O FALSE SI YA EXISTIA EN EL ARBOL
@@ -92,8 +97,48 @@ public class ABB<T> {
         if(cursor== null){
             return -1;
         }
-//        if()
-        return 1;
+        int alturaIzquierda= alturaBalanceado(cursor.getIzquierda());
+        if(alturaIzquierda == -2){
+            return -2;
+        }
+
+        int alturaDerecha= alturaBalanceado(cursor.getDerecha());
+        if(alturaDerecha == -2){
+            return -2;
+        }
+
+        if(Math.abs(alturaIzquierda-alturaDerecha) > 1){
+            return -2;
+        }
+
+        return 1 + Math.max(alturaIzquierda, alturaDerecha);
+    }
+
+
+
+    public static void main (String [] args){
+
+        ABB arbol= new ABB();
+        arbol.agregar(6, "Florencia");
+        arbol.agregar(6, "Rocio");
+        arbol.agregar(3, "Matias");
+        arbol.agregar(3, "Pedro");
+        arbol.agregar(5, "Francisco");
+        arbol.agregar(4, "Francisco");
+        arbol.agregar(7, "Pedro");
+        arbol.agregar(2, "Pedro");
+        arbol.agregar(1, "Pedro");
+
+//        List<String> lista= new ArrayList<>(arbol.elementosPorNivel(2));
+//        for(String l: lista){
+//            System.out.println(l);
+//        }
+
+        System.out.println(arbol.esBalanceado());
+
+
+
+
     }
 
 
