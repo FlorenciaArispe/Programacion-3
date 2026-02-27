@@ -28,11 +28,7 @@ public class GrafoDirigido<T> implements Grafo<T> {
 
         vertices.remove(verticeId);
 
-        for(LinkedList<Arco<T>> l : vertices.values()){
-
-
-
-        }
+        
 
     }
 
@@ -84,18 +80,26 @@ public class GrafoDirigido<T> implements Grafo<T> {
 
     @Override
     public Iterator<Integer> obtenerAdyacentes(int verticeId) {
+        ArrayList<Integer> adyacentes= new ArrayList<Integer>();
+        LinkedList<Arco<T>> arcos= vertices.get(verticeId);
 
-        return null;
+        for(Arco<T> a : arcos){
+            adyacentes.add(a.getVerticeDestino());
+        }
+        return adyacentes.iterator();
     }
 
     @Override
     public Iterator<Arco<T>> obtenerArcos() {
-        ArrayList<T> arcos= new ArrayList<>();
-
-        
-
-
-        return null;
+        ArrayList<Arco<T>> arcos= new ArrayList<Arco<T>>();
+        for(LinkedList<Arco<T>> listaArcos: vertices.values()){
+            Iterator<Arco<T>> it= listaArcos.iterator();
+            while(it.hasNext()){
+                Arco<T> a= it.next();
+                arcos.add(a);
+            }
+        }
+        return arcos.iterator();
     }
 
     @Override
