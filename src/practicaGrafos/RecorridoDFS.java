@@ -41,6 +41,8 @@ public class RecorridoDFS {
             Integer adyacente= adyacentes.next();
             if(color.get(adyacente).equals("Blanco")){
                 DFS_Visit(adyacente);
+            } else if (color.get(adyacente).equals("Amarillo")) {
+                System.out.println("Arbol Black---> se encontro un ciclo");
             }
         }
         color.put(vertice, "Negro");
