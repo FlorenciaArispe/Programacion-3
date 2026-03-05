@@ -47,9 +47,14 @@ public class RecorridoBFS {
         }
     }
 
-//    Escribir un algoritmo que, dado un grafo dirigido y dos vértices i, j de este grafo, devuelva el
-//    camino simple (sin ciclos) de mayor longitud del vértice i al vértice j. Puede suponerse que
-//    el grafo de entrada es acíclico.
+//    Supongamos que una ciudad se encuentra modelada mediante un grafo, donde cada nodo
+//    es una esquina, y las aristas representan las calles. Diseñe un algoritmo tal que dadas dos
+//    esquinas, devuelva el camino más corto entre ambas de manera de caminar la menor
+//    cantidad de cuadras posible.
+
+
+
+
 
     
 
