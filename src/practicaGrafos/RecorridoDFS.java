@@ -319,4 +319,75 @@ public class RecorridoDFS {
     }
 
 
+//    Dado un grsafo dirigido, implementar un algoritmo en java que determina si el mismo contiene, por lo menos 2
+//    ciclos donde no se compartan arcos entre ambos ciclos (si se pueden compartir vertices).
+
+    public boolean tiene2CiclosDistintos(Grafo<Integer> grafo){
+        iniciarBlanco(grafo);
+        LinkedList<Arco> primerCiclo= new LinkedList<>();
+
+        LinkedList<Integer> caminoActual= new LinkedList<>();
+        Iterator<Integer> vertices= grafo.obtenerVertices();
+
+        while(vertices.hasNext()){
+            Integer vertice= vertices.next();
+            if(color.get(vertice).equals("Blanco")){
+                 boolean tiene= tiene2CiclosDistintos(grafo, vertice, caminoActual, primerCiclo);
+                 if(tiene) return true;
+            }
+        }
+        return false;
+
+    }
+
+    public boolean tiene2CiclosDistintos(Grafo<Integer> grafo, Integer origen, LinkedList<Integer> caminoActual,  LinkedList<Arco> primerCiclo){
+        color.put(origen, "Amarillo");
+        caminoActual.add(origen);
+
+        Iterator<Integer> adyacentes= grafo.obtenerAdyacentes(origen);
+        while(adyacentes.hasNext()){
+            Integer adyacente= adyacentes.next();
+            if(color.get(adyacente).equals("Blanco")){
+               boolean tiene= tiene2CiclosDistintos(grafo, adyacente, caminoActual, primerCiclo);
+               if(tiene) return true;
+            }
+            else if(color.get(adyacente).equals("Amarillo")){
+                int indice= caminoActual.indexOf(adyacente);
+                Integer ultimo= caminoActual.getLast();
+                LinkedList<Arco> ciclo= new LinkedList<>();
+
+                for(int i= indice; i < caminoActual.size()-1; i++){
+                    Integer v1= caminoActual.get(i);
+                    Integer v2= caminoActual.get(i+1);
+                    ciclo.add(new Arco<>(v1,v2, null));
+                }
+                ciclo.add(new Arco<>(ultimo, adyacente, null));
+
+                if(primerCiclo.isEmpty()){
+                    primerCiclo.addAll(ciclo);
+
+                }
+                else{
+                    //si no es el primer ciclo tengo que comparar lo de primer ciclo con camino actual
+                    boolean sonDistintos= true;
+                    for (Arco arco: ciclo){
+                        if(primerCiclo.contains(arco)){
+                           sonDistintos=false;
+                           break;
+                        }
+                    }
+                    if (sonDistintos) return true;
+
+                }
+
+
+            }
+        }
+        color.put(origen, "Negro");
+        caminoActual.removeLast();
+
+        return false;
+    }
+
+
 }
