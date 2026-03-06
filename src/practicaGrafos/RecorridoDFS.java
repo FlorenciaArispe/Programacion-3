@@ -1,10 +1,14 @@
 package practicaGrafos;
 
+import Tp4Grafos.Arco;
+
 import java.util.*;
 
 public class RecorridoDFS {
     private Grafo<Integer> grafo;
     private Map<Integer, String> color;
+
+    private Map<String, String> colorString;
 
     public RecorridoDFS(Grafo<Integer> grafo){
         this.grafo= grafo;
@@ -175,6 +179,144 @@ public class RecorridoDFS {
         }
     }
 
+//    Dado un grafo no orientado que modela las rutas de la provincia de Buenos Aires, devolver
+//    todos los caminos alternativos que se pueden tomar para ir desde la ciudad de Buenos
+//    Aires a la ciudad de Tandil, considerando que en el tramo Las Flores-Rauch está cortado al
+//    tránsito.
+
+    public void iniciarBlancoString(Grafo<String> grafo){
+        Iterator<String> it= grafo.obtenerVertices();
+        while(it.hasNext()){
+            colorString.put(it.next(), "Blanco");
+        }
+    }
+    public LinkedList<LinkedList<String>> obtenerRutas(Grafo<String> grafo, String origen, String destino){
+        iniciarBlancoString(grafo);
+        LinkedList<String> caminoActual= new LinkedList<>();
+        LinkedList<LinkedList<String>> caminos= new LinkedList<>();
+
+        obtenerRutas(grafo, origen, destino, caminoActual, caminos);
+        return caminos;
+
+
+    }
+
+    public void obtenerRutas(Grafo<String> grafo, String actual, String destino,
+                                                       LinkedList<String> caminoActual,
+                                                       LinkedList<LinkedList<String>> caminos){
+        caminoActual.add(actual);
+        if(actual.equals(destino)){
+
+            caminos.add(new LinkedList<>(caminoActual));
+
+        }
+        else{
+
+            colorString.put(actual, "Amarillo");
+            Iterator<String> adyacentes= grafo.obtenerAdyacentes(actual);
+            while(adyacentes.hasNext()){
+                String ciudad= adyacentes.next();
+                if(colorString.get(ciudad).equals("Blanco")){
+
+                    boolean tramoCortado= !(actual.equals("Las flores") && ciudad.equals("Rauch")) &&
+                            !(ciudad.equals("Las flores") && actual.equals("Rauch"));
+                    if(tramoCortado){
+
+                       obtenerRutas(grafo, ciudad, destino, caminoActual, caminos);
+
+                    }
+
+
+                }
+            }
+
+        }
+        caminoActual.removeLast();
+        colorString.put(actual, "Blanco");
+    }
+
+//    dado un grafo no dirigido escribir un algoritmo en Java que permita encontrar el ciclo hamiltoniano.
+//            (es un ciclo que pasa una vez por todos los vértices de V) de mayor peso. O sea que la suma de los arcos que
+//            compponen el ciclo sea la mahyor posible
+//    devuelva como resultado la lista de vertice que se deben seguir en secuencia par forma el ciclo
+
+    public LinkedList<Integer> cicloHamiltoniano(Grafo<Integer> grafo){
+        iniciarBlanco(grafo);
+        LinkedList<Integer> caminoActual= new LinkedList<>();
+        LinkedList<Integer> cicloMayor= new LinkedList<>();
+        Iterator<Integer> vertices= grafo.obtenerVertices();
+        Integer sumaArcosActual=0;
+        Integer sumaMayor=0;
+        while(vertices.hasNext()){
+            Integer vertice= vertices.next();
+            if(color.get(vertice).equals("Blanco")){
+                cicloHamiltoniano(grafo,vertice, vertice, cicloMayor, caminoActual,sumaArcosActual,sumaMayor);
+            }
+        }
+        return cicloMayor;
+    }
+    public void cicloHamiltoniano(Grafo<Integer> grafo, Integer inicio, Integer origen, LinkedList<Integer> cicloMayor,
+                                  LinkedList<Integer> caminoActual, Integer sumaArcosActual, Integer sumaMayor){
+
+        color.put(origen, "Amarillo");
+        caminoActual.add(origen);
+
+        Iterator<Integer> adyacentes= grafo.obtenerAdyacentes(origen);
+        while (adyacentes.hasNext()){
+            Integer adyacente= adyacentes.next();
+            if(color.get(adyacente).equals("Blanco")){
+                Arco<Integer> arco= grafo.obtenerArco(origen,adyacente);
+                cicloHamiltoniano(grafo,inicio, adyacente, cicloMayor, caminoActual, sumaArcosActual + arco.getEtiqueta(), sumaMayor);
+            }
+            else if(color.get(adyacente).equals("Amarillo") && caminoActual.size() == grafo.cantidadVertices()
+            && inicio.equals(adyacente)){
+                if(sumaArcosActual> sumaMayor){
+                    sumaMayor= sumaArcosActual;
+                    cicloMayor.clear();
+                    cicloMayor.addAll(caminoActual);
+                    cicloMayor.add(inicio);
+                }
+            }
+        }
+        color.put(origen, "Blanco");
+        caminoActual.removeLast();
+
+    }
+
+//    Escriba un algoritmo en JAVA que dado un grafo G, devuelva en una lista, si existe,
+//    un camino de longitud mayor a d que vaya desde v hasta w. Los valores de d, v, y w seran dados por parametro.
+    public LinkedList<Integer> caminoMayoraD(Grafo<Integer> grafo, Integer d, Integer origen, Integer destino){
+        iniciarBlanco(grafo);
+        LinkedList<Integer> camino= new LinkedList<>();
+        return caminoMayoraD(grafo, d, origen, destino, camino);
+
+
+    }
+
+    public LinkedList<Integer> caminoMayoraD(Grafo<Integer> grafo, Integer d, Integer actual, Integer destino, LinkedList<Integer> camino){
+        color.put(actual, "Amarillo");
+        camino.add(actual);
+        if(actual.equals(destino) && camino.size() - 1 > d){
+           return camino;
+        }
+
+
+            Iterator<Integer> adyacentes= grafo.obtenerAdyacentes(actual);
+            while(adyacentes.hasNext()){
+                Integer adyacente= adyacentes.next();
+                if(color.get(adyacente).equals("Blanco")){
+
+                   LinkedList<Integer> resultado= caminoMayoraD(grafo, d, adyacente, destino, camino);
+                   if(resultado !=null){
+                       return resultado;
+                   }
+                }
+            }
+
+        color.put(actual,"Blanco");
+        camino.removeLast();
+        return null;
+    }
 
 
 }

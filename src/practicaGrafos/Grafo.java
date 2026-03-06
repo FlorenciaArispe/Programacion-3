@@ -24,7 +24,7 @@ public interface Grafo<T> {
     public boolean existeArco(int verticeId1, int verticeId2);
 
     // Obtener el arco que conecta el verticeId1 con el verticeId2
-    public Tp4Grafos.Arco<T> obtenerArco(int verticeId1, int verticeId2);
+    public Arco<T> obtenerArco(int verticeId1, int verticeId2);
 
     // Devuelve la cantidad total de vertices en el grafo
     public int cantidadVertices();
@@ -33,10 +33,10 @@ public interface Grafo<T> {
     public int cantidadArcos();
 
     // Obtiene un iterador que me permite recorrer todos los vertices almacenados en el grafo
-    public Iterator<Integer> obtenerVertices();
+    public Iterator<T> obtenerVertices();
 
     // Obtiene un iterador que me permite recorrer todos los vertices adyacentes a verticeId
-    public Iterator<Integer> obtenerAdyacentes(int verticeId);
+    public Iterator<T> obtenerAdyacentes(T verticeId);
 
     // Obtiene un iterador que me permite recorrer todos los arcos del grafo
     public Iterator<Tp4Grafos.Arco<T>> obtenerArcos();

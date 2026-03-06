@@ -8,21 +8,21 @@ package Tp4Grafos;
  */
 public class Arco<T> {
 
-    private int verticeOrigen;
-    private int verticeDestino;
+    private T verticeOrigen;
+    private T verticeDestino;
     private T etiqueta;
 
-    public Arco(int verticeOrigen, int verticeDestino, T etiqueta) {
+    public Arco(T verticeOrigen, T verticeDestino, T etiqueta) {
         this.verticeOrigen = verticeOrigen;
         this.verticeDestino = verticeDestino;
         this.etiqueta = etiqueta;
     }
 
-    public int getVerticeOrigen() {
+    public T getVerticeOrigen() {
         return verticeOrigen;
     }
 
-    public int getVerticeDestino() {
+    public T getVerticeDestino() {
         return verticeDestino;
     }
 

@@ -99,6 +99,51 @@ public class RecorridoBFS {
 
     }
 
+//    Dados un grafo G con sus vértices rotulados con colores y dos vértices v1 y v2, escriba un
+//    algoritmo que encuentre un camino desde el vértice v1 al vértice v2 tal que no pase por
+//    vértices rotulados con el color rojo
+
+    Map<Integer, String> coloresVertices= new HashMap<>();
+    //en constructor cuando el grafo se crea, tambien se le aplican a cada vertice un color. Igual que cuando
+    //se agrega un vertice, se agrega un color al Map... asi que para empezar el ejercicio suponemos que ya colores esta
+    //completo con el color de cada vertice.
+
+    public LinkedList<Integer> caminoSinRojo(Grafo<Integer> grafo, Integer v1, Integer v2){
+        marcarComoNoVisitados(grafo);
+        LinkedList<Integer> camino= new LinkedList<>();
+        Map<Integer, Integer> padres= new HashMap<>();
+
+        Queue<Integer> fila= new LinkedList<>();
+        visitados.put(v1, true);
+        fila.add(v1);
+        while(!fila.isEmpty()){
+            Integer vertice= fila.poll();
+            Iterator<Integer> adyacentes= grafo.obtenerAdyacentes(vertice);
+            while(adyacentes.hasNext()){
+                Integer adyacente= adyacentes.next();
+                if(!visitados.get(adyacente) && coloresVertices.get(adyacente).equals("Rojo")){
+                    visitados.put(adyacente, true);
+                    padres.put(adyacente,vertice);
+                    if(adyacente.equals(v2)){
+                        Integer actual= v2;
+                        while (actual!=null){
+                            camino.addFirst(actual);
+                            actual=padres.get(actual);
+                        }
+                        return camino;
+                    }
+                    else{
+                        fila.add(adyacente);
+                    }
+
+                }
+            }
+        }
+        return camino;
+    }
+
+
+
 
 
 
