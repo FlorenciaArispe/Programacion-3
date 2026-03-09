@@ -389,5 +389,47 @@ public class RecorridoDFS {
         return false;
     }
 
+//    BACKTRACKING
+//    Se tiene un conjunto de salas comunicadas entre sí a través de puertas que se abren solamente
+//    en un sentido. Una de las salas se denomina entrada y la otra salida. Construir un algoritmo que
+//    permita ir desde la entrada a la salida atravesando la máxima cantidad de salas. Idea: podría
+//    representar el problema mediante un grafo dirigido, donde cada nodo es una habitación, y cada
+//    puerta es un arco dirigido hacia otra habitación.
+
+    LinkedList<Integer> resultado= new LinkedList<>();
+
+    public LinkedList<Integer> maximaSalas(Grafo<Integer> grafo, Integer entrada, Integer salida){
+        iniciarBlanco(grafo);
+        resultado.clear();
+
+        LinkedList<Integer> caminoActual= new LinkedList<>();
+
+        maximaSalas(grafo, entrada, salida, caminoActual);
+        return resultado;
+    }
+
+    public void maximaSalas(Grafo<Integer> grafo, Integer cursor, Integer salida, LinkedList<Integer> caminoActual){
+        color.put(cursor, "Amarillo");
+        caminoActual.add(cursor);
+        if(cursor.equals(salida)){
+            if(caminoActual.size() > resultado.size()){
+                resultado.clear();
+                resultado.addAll(caminoActual);
+            }
+        }
+        else{
+            Iterator<Integer> adyacentes= grafo.obtenerAdyacentes(cursor);
+            while(adyacentes.hasNext()){
+                Integer adyacente= adyacentes.next();
+                if(color.get(adyacente).equals("Blanco")){
+                    maximaSalas(grafo, adyacente, salida, caminoActual);
+                }
+            }
+        }
+
+        color.put(cursor, "Blanco");
+        caminoActual.removeLast();
+    }
+
 
 }
