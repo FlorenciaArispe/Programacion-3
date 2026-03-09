@@ -218,6 +218,234 @@ public class Backtracking {
     }
 
 
+    //    Caballo de Atila. Por donde pisa el caballo de Atila jamás vuelve a crecer el pasto. El caballo fue
+//    directamente hacia el jardín de n x n casillas. Empezó su paseo por una casilla cualquiera y volvió
+//    a ella, es decir hizo un recorrido cerrado. No visitó dos veces una misma casilla, se movió de una
+//    casilla a otra vecina en forma horizontal o vertical, pero nunca en diagonal. Por donde pisó el
+//    caballo, el pasto jamás volvió a crecer. Luego de terminado el recorrido en algunas casillas
+//    todavía había pasto (señal de que en ellas no había estado el caballo). Escriba un algoritmo que
+//    deduzca el recorrido completo que hizo el caballo.
+
+
+    private CeldaSimple[][] jardin = new CeldaSimple[3][3];
+    private LinkedList<CeldaSimple> caminoResultado= new LinkedList<>();
+    private boolean[][] visitadosCamino= new boolean[3][3];
+
+    public int cantidadDeJardinSinPasto(){
+        int result=0;
+        for (int fila=0; fila < jardin.length; fila++){
+            for(int col=0; col < jardin[fila].length; col++){
+                CeldaSimple celda= jardin[fila][col];
+
+                //si no tiene pasto quier decir que el caballo paso por ahi
+                if(!celda.isTienePasto()){
+                   result++;
+
+                }
+            }
+        }
+        return result;
+    }
+
+    public void marcarComoNoVisitadosCamino(){
+        for(int fila=0; fila< jardin.length; fila++){
+            for(int col=0; col< jardin[fila].length; col++){
+                visitadosCamino[fila][col]= false;
+            }
+        }
+    }
+
+
+    public LinkedList<CeldaSimple> caminoDelCaballo(){
+
+        jardin[0][1].setTienePasto(false);
+        jardin[1][1].setTienePasto(false);
+        jardin[1][2].setTienePasto(false);
+        jardin[0][2].setTienePasto(false);
+
+        marcarComoNoVisitadosCamino();
+
+        int cantSinPasto= cantidadDeJardinSinPasto();
+
+        LinkedList<CeldaSimple> caminoActual= new LinkedList<>();
+
+
+        for (int fila=0; fila < jardin.length; fila++){
+            for(int col=0; col < jardin[fila].length; col++){
+                CeldaSimple celda= jardin[fila][col];
+
+                //si no tiene pasto quier decir que el caballo paso por ahi
+                if(!celda.isTienePasto()){
+                    caminoDelCaballo(caminoActual, fila, col, fila, col, cantSinPasto);
+
+                }
+            }
+        }
+        return caminoResultado;
+    }
+
+
+    public void caminoDelCaballo(LinkedList<CeldaSimple> caminoActual, int filaOrigen, int colOrigen, int filaActual, int colActual, int cantSinPasto){
+        CeldaSimple actual= jardin[filaActual][colActual];
+        caminoActual.add(actual);
+        visitadosCamino[filaActual][colActual]= true;
+
+
+        if( (caminoActual.size() == cantSinPasto) && (Math.abs(filaActual - filaOrigen) + Math.abs(colActual - colOrigen) == 1) ){
+            caminoResultado.clear();
+
+            caminoResultado.addAll(new LinkedList<CeldaSimple>(caminoActual));
+            return;
+        }
+
+            //ARRIBA
+            if(filaActual - 1 >= 0 && !jardin[filaActual -1][colActual].isTienePasto() && !visitadosCamino[filaActual-1][colActual]){
+                caminoDelCaballo(caminoActual, filaOrigen, colOrigen, filaActual-1, colActual, cantSinPasto);
+            }
+            //ABAJO
+            if(filaActual + 1 < jardin.length  && !jardin[filaActual + 1][colActual].isTienePasto()&& !visitadosCamino[filaActual+1][colActual]){
+                caminoDelCaballo(caminoActual, filaOrigen, colOrigen, filaActual+1, colActual, cantSinPasto);
+            }
+            //IZQUIERDA
+            if(colActual -1 >= 0 && !jardin[filaActual][colActual - 1].isTienePasto() && !visitadosCamino[filaActual][colActual -1]){
+                caminoDelCaballo(caminoActual, filaOrigen, colOrigen, filaActual, colActual - 1, cantSinPasto);
+            }
+            //DERECHA
+            if(colActual + 1 < jardin.length  && !jardin[filaActual][colActual + 1].isTienePasto() && !visitadosCamino[filaActual][colActual + 1]){
+                caminoDelCaballo(caminoActual, filaOrigen, colOrigen, filaActual, colActual + 1, cantSinPasto);
+            }
+
+        caminoActual.removeLast();
+        visitadosCamino[filaActual][colActual]= false;
+    }
+
+
+//    Tablero mágico. Dado un tablero de tamaño n x n, construir un algoritmo que ubique (si es posible)
+//    n*n números naturales diferentes, entre 1 y un cierto k (con k>n*n), de manera tal que la suma de
+//    las columnas y de las filas sea igual a S.
+
+    //DEVUELVE TRUE SI MODIFCO EL TABLERO MAGICO OSEA QUE ENCONTRO UNA SOLUCION, FALSE SI NO LO PUDO HACER
+
+    private CeldaSimple[][] tableroMagico= new CeldaSimple[3][3];
+
+    public boolean llenarTableroMagico(int s, int k){
+        int sumaFila=0;
+        int sumaCol=0;
+
+        ArrayList<Integer> numerosPosibles= new ArrayList<>(k);
+        for (int i=1; i <= k;i++ ){
+            numerosPosibles.add(i);
+        }
+
+        return llenarTableroMagico(s,numerosPosibles,sumaFila, sumaCol,0,0);
+
+    }
+
+    public boolean llenarTableroMagico(int s, ArrayList<Integer> numerosPosibles,  int sumaFila, int sumaCol,  int filaActual, int colActual){
+
+
+
+        if(filaActual == tableroMagico.length ){
+            return true;
+        }
+
+        int sigFila= filaActual;
+        int sigCol= colActual +1;
+
+        if(sigCol == tableroMagico.length){
+            sigCol=0;
+            sigFila++;
+        }
+
+        for(int numeros=0; numeros < numerosPosibles.size(); numeros++){
+            Integer numero= numerosPosibles.get(numeros);
+            numerosPosibles.remove(numeros);
+            tableroMagico[filaActual][colActual].setValor(numero);
+            sumaFila+= numero;
+            sumaCol+= numero;
+
+            if(sumaFila <= s && sumaCol <= s){
+
+                if(llenarTableroMagico(s, numerosPosibles, sumaFila, sumaCol,  sigFila, sigCol)){
+                    return true;
+                }
+
+            }
+            numerosPosibles.add(numeros,numero);
+            tableroMagico[filaActual][colActual].setValor(0);
+            sumaCol-=numero;
+            sumaFila-= numero;
+
+
+        }
+
+        return false;
+
+    }
+
+//    Dada una cuadricula de tamaño N x M y una lista con N * M números enteros (positivos y negativos) se desea encontrar, si existe, una configuración de la
+//    cuadrícula dónde, luego de colocar todos los númeres de la bolsa, se cumplan las siguientes restricciones:
+//    -Si tomamos el valor de una fila como la suma de los valores que contiene, ninguna fila puede tener un valor superior a un valor F, dado por parámetro.
+//    -Si tomamos el valor de una columna como la suma de los valores que contiene, ninguna columna puede tener un valor inferior a un valor C, dado por parámetro.
+
+    private int[][] cuadricula =new int[2][2];
+    private ArrayList<Integer> numeros= new ArrayList<>();
+
+    //TRUE SI PUDO UBICARLOS, FALSE SI NO PUDO MODIFICARLOS
+    public boolean ubicarNumeros(int n, int m, int F, int C){
+        numeros.add(2);
+        numeros.add(-1);
+        numeros.add(4);
+        numeros.add(3);
+
+        int [] sumaFilas=new int[n];
+        int [] sumaCol= new int[m];
+
+        return ubicarNumeros(F,C,0,0,sumaFilas,sumaCol);
+    }
+
+    public boolean ubicarNumeros( int F, int C, int fila, int columna, int[] sumaF, int[] sumaC){
+        if(fila == cuadricula.length){
+            return true;
+        }
+
+        int sigFila= fila;
+        int sigCol= columna + 1;
+        if(sigCol == cuadricula[0].length){
+            sigCol=0;
+            sigFila++;
+        }
+
+        for(int i=0; i < numeros.size(); i++){
+            int numero= numeros.remove(i);
+
+            cuadricula[fila][columna]= numero;
+            sumaF[fila]+= numero;
+            sumaC[columna]+= numero;
+
+
+            if(sumaF[fila] <= F){
+                if(!(fila== cuadricula.length -1 && sumaC[columna] < C)){
+                    if(ubicarNumeros(F,C,sigFila,sigCol,sumaF,sumaC)){
+                        return true;
+                    }
+                }
+
+
+            }
+
+            cuadricula[fila][columna]= 0;
+            numeros.add(i,numero);
+            sumaF[fila]-= numero;
+            sumaC[columna]-= numero;
+
+        }
+        return false;
+    }
+
+
+
+
 
 
 
