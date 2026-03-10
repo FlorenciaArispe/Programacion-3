@@ -1,6 +1,8 @@
-package practicaGrafos;
+package Backtracking;
 
-import java.lang.reflect.Array;
+import practicaGrafos.Celda;
+import practicaGrafos.CeldaSimple;
+
 import java.util.*;
 
 public class Backtracking {
@@ -430,8 +432,6 @@ public class Backtracking {
                         return true;
                     }
                 }
-
-
             }
 
             cuadricula[fila][columna]= 0;
@@ -442,6 +442,46 @@ public class Backtracking {
         }
         return false;
     }
+
+//    Dado un conjunto de M números naturales positivos se desea responder en cuántas secuencias distintas se pueden ubicar dichos números sabiendo que las secuencias no deben
+//    estar vacias ni contener 2 números pares seguidos.
+//    Por ejemplo, con el conjunto M = [1,2, 3, 4) se podrían formar 12 secuencias < (1,2,3,4), (1,4,3,2),
+//    (2,1,3,4), (2,1,4,3), (23,1,4), 1234,1), (3,2.1,4. (3,4,1,2). (4,1,2,3), (4,1,3,2), (4,3,2,1), (4,3,1,2) (nótese que el 2 y el 4 nunca van de manera
+//    consecutive ya que ambos son pares).
+
+    public int cantidadSecuencias(){
+        ArrayList<Integer> numeros= new ArrayList<>(4);
+        numeros.add(1);
+        numeros.add(2);
+        numeros.add(3);
+        numeros.add(4);
+
+        ArrayList<Integer> secuenciaActual= new ArrayList<>(4);
+
+        return cantidadSecuencias(numeros.size(),numeros, secuenciaActual);
+    }
+
+    public int cantidadSecuencias(int m, ArrayList<Integer> numeros, ArrayList<Integer> secuenciaActual){
+        int total=0;
+        if(m == secuenciaActual.size()){
+            return 1;
+        }
+
+        for (int i=0; i < numeros.size(); i++){
+            int numero= numeros.remove(i);
+
+            if(!secuenciaActual.isEmpty() || !(secuenciaActual.get(secuenciaActual.size() - 1) % 2 ==0 && numero % 2 == 0)){ //SOLO SI EL PROXIMO NUMERO QUE AGREGO NO ES PAR O EL ULTIMO NO ES PAR..
+                secuenciaActual.add(numero);
+                total+= cantidadSecuencias(m ,numeros, secuenciaActual);
+                secuenciaActual.remove(secuenciaActual.size()-1);
+            }
+            numeros.add(i, numero);
+
+        }
+        return total;
+    }
+
+
 
 
 
